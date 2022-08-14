@@ -1,0 +1,8 @@
+vosk
+argparse
+playsound==1.2.2
+sounddevice
+pyttsx3
+python-vlc
+pynput
+urllib3

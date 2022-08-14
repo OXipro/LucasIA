@@ -4,18 +4,17 @@ import pyttsx3
 import playsound
 from WeatherGetter import getWeather
 import vlc
-
-betaprefix = "lucas"
-tolerancy = 0
-WeatherCity = "Waterloo"
-UserName = "OXipro"
+from config import *
+import itertools
+from pynput.keyboard import Key, Controller
+from time import sleep
 # Developer procedure
-prefix = betaprefix + " "
+prefix = prefixconfig + " "
 voice = pyttsx3.init()
 voices = voice.getProperty('voices')
-voice.setProperty('voice', voices[2].id)
+voice.setProperty('voice', voices[lucasiavoice].id)
 rate = voice.getProperty('rate')
-voice.setProperty('rate', 160)
+voice.setProperty('rate', lucasiarate)
 vlc = vlc.Instance()
 radio = vlc.media_player_new()
 
@@ -23,7 +22,7 @@ radio = vlc.media_player_new()
 class commands:
     @staticmethod
     def commands(data):
-        if data.find(prefix) >= tolerancy or data.find(betaprefix) >= tolerancy:
+        if data.find(prefix) >= tolerancy or data.find(prefixconfig) >= tolerancy:
             print("detected")
             playsound.playsound(".\sounds\prefixdetected.wav")
         if data.find(prefix + "stop") >= tolerancy:
@@ -55,6 +54,13 @@ class commands:
             w = vlc.media_new("http://audiostream.rtl.be/contactfr192")
             radio.set_media(w)
             radio.play()
-        if data.find(prefix + "mais moins fort") >= tolerancy or data.find(prefix + "baisse le volume") >= tolerancy:
-            print("test")
-
+        if data.find(prefix + "plus de volume") >= tolerancy:
+            for _ in itertools.repeat(None, 5):
+                Controller().press(Key.media_volume_up)
+                sleep(1)
+                Controller().press(Key.media_volume_up)
+        if data.find(prefix + "moins de volume") >= tolerancy:
+            for _ in itertools.repeat(None, 5):
+                Controller().press(Key.media_volume_down)
+                sleep(1)
+                Controller().press(Key.media_volume_down)
